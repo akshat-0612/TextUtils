@@ -20,7 +20,7 @@ def analyze(request):
         analyzed = ""
         signs='''+-/*'''
         f=0
-
+        result=""
 
         if (removepunc != "off" or inline_text!="off" or capitalize!="off" or calculator!="off"):
             if (calculator != "off"):
@@ -51,7 +51,7 @@ def analyze(request):
                         for i in arr:
                             sum /= int(i)
                             analyzed = str(sum)
-
+                result="Calculated"
             elif(removepunc=="on" and inline_text=="on"):
                 for ch in djtext:
                     if ch not in punctuations and ch!="\n":
@@ -59,6 +59,7 @@ def analyze(request):
                 if capitalize=="on":
                     analyzed=[x.upper() for x in analyzed]
                     analyzed = ' '.join([str(elem) for elem in analyzed])
+                result="Punchuation Removed and Inlined"
             elif(inline_text=="on"):
                 for ch in djtext:
                     if ch!="\n":
@@ -66,6 +67,7 @@ def analyze(request):
                 if capitalize=="on":
                     analyzed=([x.upper() for x in analyzed])
                     analyzed = ' '.join([str(elem) for elem in analyzed])
+                result="Text Inlined"
             elif(removepunc=="on"):
                 for ch in djtext:
                     if ch not in punctuations:
@@ -73,23 +75,20 @@ def analyze(request):
                 if capitalize=="on":
                     analyzed=[x.upper() for x in analyzed]
                     analyzed = ' '.join([str(elem) for elem in analyzed])
+                result="Punchuation Removed"
             else:
                 for ch in djtext:
                     analyzed+=ch
                 analyzed=[x.upper() for x in analyzed]
-                analyzed = ' '.join([str(elem) for elem in analyzed])
+                analyzed = ''.join([str(elem) for elem in analyzed])
+                result="Capitalized"
 
         else:
             return render(request, "error.html")
 
-        params = {"aim": "remove  punctuation", "analyzed_text": analyzed}
+        params = {"aim": result, "analyzed_text": analyzed}
         return render(request, "analyze.html", params)
     else:
         return render(request, "error.html")
-
-
-
-
-
 
 
